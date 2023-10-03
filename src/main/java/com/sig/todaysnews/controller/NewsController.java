@@ -2,43 +2,55 @@ package com.sig.todaysnews.controller;
 
 import com.sig.todaysnews.dto.ClusterDto;
 import com.sig.todaysnews.sevice.NewsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 
+@RestController
+@RequestMapping("/news")
+@RequiredArgsConstructor
 public class NewsController {
-    NewsService newsService;
+    private NewsService newsService;
 
-    @GetMapping("/news/proposal")
+    @GetMapping("/proposal")
     public ResponseEntity<List<ClusterDto>> getProposal() {
         return ResponseEntity.ok(null);
     }
 
-    @GetMapping("/news/section")
-    public ResponseEntity<List<ClusterDto>> getSection(Long sid, Date date) {
+    @GetMapping("/section")
+    public ResponseEntity<List<ClusterDto>> getSection(
+            Long sid,
+            Date date
+    ) {
         return ResponseEntity.ok(null);
     }
 
-    @GetMapping("/news.hottopic")
+    @GetMapping("/hottopic")
     public ResponseEntity<List<ClusterDto>> getHotClusters() {
         return ResponseEntity.ok(null);
     }
 
-    @GetMapping("/news/cluster")
-    public ResponseEntity<ClusterDto> getCluster(Long cid) {
+    @GetMapping("/cluster")
+    public ResponseEntity<ClusterDto> getCluster(
+            Long cid
+    ) {
         return ResponseEntity.ok(null);
     }
 
-    @DeleteMapping("/news/cluster")
-    public ResponseEntity<Void> deleteCluster(Long cid) {
+    @DeleteMapping("/cluster")
+    public ResponseEntity<Void> deleteCluster(
+            Long cid
+    ) {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("//news/article")
-    public ResponseEntity<Void> deleteArticle(Long aid) {
+    @DeleteMapping("/article")
+    public ResponseEntity<Void> deleteArticle(
+            Long aid
+    ) {
         return ResponseEntity.ok().build();
     }
 }

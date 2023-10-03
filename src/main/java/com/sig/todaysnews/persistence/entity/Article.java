@@ -26,5 +26,7 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "section_id")
     Section section;
+    @ManyToOne
+    @JoinColumn(name = "cluster_id")
     Cluster cluster;
 }

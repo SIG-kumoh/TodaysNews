@@ -6,12 +6,12 @@
 
     <persistence-unit name="persistence" transaction-type="RESOURCE_LOCAL">
 
-        <class>persistence.entity.Article</class>
-        <class>persistence.entity.Authority</class>
-        <class>persistence.entity.Cluster</class>
-        <class>persistence.entity.Section</class>
-        <class>persistence.entity.User</class>
-        <class>persistence.entity.ViewHistory</class>
+        <class>com.sig.todaysnews.persistence.entity.Article</class>
+        <class>com.sig.todaysnews.persistence.entity.Authority</class>
+        <class>com.sig.todaysnews.persistence.entity.Cluster</class>
+        <class>com.sig.todaysnews.persistence.entity.Section</class>
+        <class>com.sig.todaysnews.persistence.entity.User</class>
+        <class>com.sig.todaysnews.persistence.entity.ViewHistory</class>
 
         <properties>
             <!-- 필수 속성 시작 -->
@@ -31,7 +31,7 @@
             <property name="hibernate.format_sql" value="true"/>
 
             <!-- snake to camel -->
-            <!-- <property name="hibernate.physical_naming_strategy" value="org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy" /> -->
+            <property name="hibernate.physical_naming_strategy" value="org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy" />
 
         </properties>
     </persistence-unit>
