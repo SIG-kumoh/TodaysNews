@@ -10,4 +10,5 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClusterDto {
+    private String temp;
 }

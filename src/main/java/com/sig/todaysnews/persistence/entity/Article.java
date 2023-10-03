@@ -15,18 +15,19 @@ import java.time.LocalDateTime;
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long articleId;
-    LocalDateTime regdate;
-    String imgUrl;
-    String url;
-    String press;
-    String title;
-    String content;
-    String writer;
+    @Column(name = "article_id")
+    private Long articleId;
+    private LocalDateTime regdate;
+    private String imgUrl;
+    private String url;
+    private String press;
+    private String title;
+    private String content;
+    private String writer;
     @ManyToOne
     @JoinColumn(name = "section_id")
-    Section section;
+    private Section section;
     @ManyToOne
     @JoinColumn(name = "cluster_id")
-    Cluster cluster;
+    private Cluster cluster;
 }

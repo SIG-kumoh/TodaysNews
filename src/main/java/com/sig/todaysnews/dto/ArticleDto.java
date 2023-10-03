@@ -10,4 +10,5 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ArticleDto {
+    private String temp;
 }

@@ -1,9 +1,12 @@
 package com.sig.todaysnews.controller;
 
 import com.sig.todaysnews.dto.UserDto;
+import com.sig.todaysnews.security.filter.JwtFilter;
 import com.sig.todaysnews.sevice.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,12 +55,16 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/signup")
     public ResponseEntity<UserDto> signup(
             @Valid @RequestBody UserDto userDto
     ) {
+        Logger logger = LoggerFactory.getLogger(UserController.class);
+        logger.debug(userDto.getNickname());
         return ResponseEntity.ok(userService.signup(userDto));
     }
 
+    @PostMapping("/dup-check")
     public ResponseEntity<Void> dupCheck(
             @Valid @RequestBody UserDto userDto
     ) {

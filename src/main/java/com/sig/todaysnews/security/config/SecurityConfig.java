@@ -38,9 +38,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/api/authenticate").permitAll() // 로그인 api
-                        .requestMatchers("/api/signup").permitAll() // 회원가입 api
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()// h2-console, favicon.ico 요청 인증 무시
+                        .requestMatchers("/auth/login").permitAll() // 로그인 api
+                        .requestMatchers("/user/signup").permitAll() // 회원가입 api
                         .requestMatchers("/favicon.ico").permitAll()
                         .anyRequest().authenticated() // 그 외 인증 없이 접근X
                 )
