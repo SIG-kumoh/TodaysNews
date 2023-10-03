@@ -9,5 +9,5 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class ArticleDto {
 }
