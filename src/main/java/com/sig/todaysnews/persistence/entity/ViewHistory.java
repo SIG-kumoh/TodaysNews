@@ -2,21 +2,22 @@ package com.sig.todaysnews.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user")
+@Table(name = "view_history")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class ViewHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long userId;
-    String username;
-    String password;
-    String profileImgUrl;
-    String nickname;
-    boolean activated;
+    Long viewHistoryId;
+    LocalDateTime regdate;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
+    Cluster cluster;
 }
