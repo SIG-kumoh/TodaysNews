@@ -1,5 +1,7 @@
-package com.sig.todaysnews.security.jwt;
+package com.sig.todaysnews.security.config;
 
+import com.sig.todaysnews.security.filter.JwtFilter;
+import com.sig.todaysnews.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +14,7 @@ public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurity
 
     @Override
     public void configure(HttpSecurity http) {
+        // security 로직에 JwtFilter 등록
         http.addFilterBefore(
                 new JwtFilter(tokenProvider),
                 UsernamePasswordAuthenticationFilter.class
