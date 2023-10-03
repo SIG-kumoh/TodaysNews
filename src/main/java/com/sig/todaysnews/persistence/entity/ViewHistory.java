@@ -19,5 +19,7 @@ public class ViewHistory {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+    @ManyToOne
+    @JoinColumn(name = "cluster_id")
     Cluster cluster;
 }
