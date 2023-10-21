@@ -56,5 +56,5 @@ public class NewsService {
     public void deleteArticle(Long aid) {
         articleRepository.deleteById(aid);
     }
-
 }
+
