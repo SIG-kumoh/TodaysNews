@@ -3,6 +3,7 @@ package com.sig.todaysnews.persistence.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,14 +16,18 @@ import java.util.List;
 public class Cluster {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long clusterId;
-    LocalDateTime regdate;
-    String imgUrl;
-    String title;
-    String summary;
+    @Column(name = "cluster_id")
+    private Long clusterId;
+    private LocalDateTime regdate;
+    private String imgUrl;
+    private String title;
+    private String summary;
     @ManyToOne
     @JoinColumn(name = "section_id")
-    Section section;
-    Cluster relatedCluster;
-    List<Article> articles;
+    private Section section;
+    @OneToOne
+    @JoinColumn(name = "cluster_id")
+    private Cluster relatedCluster;
+    @OneToMany(mappedBy = "cluster")
+    private List<Article> articles = new ArrayList<>();
 }

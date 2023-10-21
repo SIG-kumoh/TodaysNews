@@ -4,6 +4,7 @@ import com.sig.todaysnews.dto.ClusterDto;
 import com.sig.todaysnews.sevice.NewsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -16,6 +17,7 @@ public class NewsController {
     private NewsService newsService;
 
     @GetMapping("/proposal")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<List<ClusterDto>> getProposal() {
         return ResponseEntity.ok(null);
     }

@@ -22,18 +22,25 @@ import java.util.stream.Collectors;
 
 @Component
 public class TokenProvider implements InitializingBean {
-
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
     private static final String AUTHORITIES_KEY = "auth";
     private final String secret;
     private final long tokenValidityInMilliseconds;
+
+    public long getRefreshTokenValidityInSeconds() {
+        return refreshTokenValidityInSeconds;
+    }
+
+    private final long refreshTokenValidityInSeconds;
     private Key key;
 
     public TokenProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
+            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds,
+            @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInSeconds) {
         this.secret = secret;
-        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000L;
+        this.refreshTokenValidityInSeconds = refreshTokenValidityInSeconds * 1000L;
     }
 
     // 빈이 생성되고 주입을 받은 후에 secret값을 Base64 Decode해서 key 변수에 할당하기 위해
@@ -43,21 +50,31 @@ public class TokenProvider implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createToken(Authentication authentication) {
+    private String createDefaultToken(Authentication authentication, Date validity) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        // 토큰의 expire 시간을 설정
+        return Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, authorities)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(validity)
+                .compact();
+    }
+
+    public String createToken(Authentication authentication) {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
-        return Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities) // 정보 저장
-                .signWith(key, SignatureAlgorithm.HS512) // 사용할 암호화 알고리즘과 , signature 에 들어갈 secret값 세팅
-                .setExpiration(validity) // set Expire Time 해당 옵션 안넣으면 expire안함
-                .compact();
+        return this.createDefaultToken(authentication, validity);
+    }
+
+    public String createReFreshToken(Authentication authentication) {
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + this.refreshTokenValidityInSeconds);
+
+        return this.createDefaultToken(authentication, validity);
     }
 
     // 토큰으로 클레임을 만들고 이를 이용해 유저 객체를 만들어서 최종적으로 authentication 객체를 리턴
@@ -80,23 +97,18 @@ public class TokenProvider implements InitializingBean {
     }
 
     // 토큰의 유효성 검증을 수행
-    public boolean validateToken(String token) {
+    public TokenState validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-
-            logger.info("잘못된 JWT 서명입니다.");
+            return TokenState.MALFORMED;
         } catch (ExpiredJwtException e) {
-
-            logger.info("만료된 JWT 토큰입니다.");
+            return TokenState.EXPIRED;
         } catch (UnsupportedJwtException e) {
-
-            logger.info("지원되지 않는 JWT 토큰입니다.");
+            return TokenState.UNSUPPORTED;
         } catch (IllegalArgumentException e) {
-
-            logger.info("JWT 토큰이 잘못되었습니다.");
+            return TokenState.ILLEGAL;
         }
-        return false;
+        return TokenState.SUCCESS;
     }
 }
