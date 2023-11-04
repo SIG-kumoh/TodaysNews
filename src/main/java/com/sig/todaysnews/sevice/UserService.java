@@ -4,12 +4,14 @@ import com.sig.todaysnews.dto.UserDto;
 import com.sig.todaysnews.persistence.entity.Authority;
 import com.sig.todaysnews.persistence.entity.User;
 import com.sig.todaysnews.persistence.repository.UserRepository;
+import com.sig.todaysnews.security.util.AuthenticationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,5 +41,43 @@ public class UserService {
 
         userDto.setPassword("");
         return userDto;
+    }
+
+    public boolean dupCheck(String username) {
+        return userRepository.findOneWithAuthoritiesByUsername(username).orElse(null) != null;
+    }
+
+    public User getMyUserWithAuthorities() {
+         return userRepository.findOneWithAuthoritiesByUsername(AuthenticationUtil.getCurrentUsername().get()).get();
+    }
+
+    public UserDto getUserWithAuthorities(String username) {
+        User user = userRepository.findOneWithAuthoritiesByUsername(username).get();
+        UserDto userDto = null;
+
+        if(user != null) {
+            userDto = UserDto.builder()
+                    .username(user.getUsername())
+                    .password(user.getPassword())
+                    .profileImgUrl(user.getProfileImgUrl())
+                    .nickname(user.getNickname())
+                    .build();
+        }
+
+        return userDto;
+    }
+
+    public UserDto updateMyUserWithAuthorities() {
+        return null;
+    }
+    public UserDto updateUserWithAuthorities(UserDto userDto) {
+        return null;
+    }
+
+    public boolean deleteMyUserWithAuthorities() {
+        return false;
+    }
+    public boolean deleteUserWithAuthorities(String username) {
+        return false;
     }
 }
