@@ -1,8 +1,8 @@
 package com.sig.todaysnews.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -10,5 +10,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClusterDto {
-    private String temp;
+    private Long clusterId;
+    private String title;
+    private String imgUrl;
+    private String summary;
+    private List<ArticleDto> articleList;
+    private LocalDateTime regdate;
+    private String chatNamespace;
+    private Long relatedClusterId;
 }

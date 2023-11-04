@@ -1,60 +1,45 @@
 package com.sig.todaysnews.sevice;
 
+import com.sig.todaysnews.dto.ArticleDto;
 import com.sig.todaysnews.dto.ClusterDto;
+import com.sig.todaysnews.persistence.entity.Article;
 import com.sig.todaysnews.persistence.entity.Cluster;
-import com.sig.todaysnews.persistence.repository.ClusterRepository;
-import com.sig.todaysnews.persistence.repository.ArticleRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-@RequiredArgsConstructor
-public class NewsService {
-    private final ClusterRepository clusterRepository;
-    private final ArticleRepository articleRepository;
-
-    public List<ClusterDto> getProposal() {
-        return null;
-    }
-
-    public List<ClusterDto> getSection(Long sid, Date date) {
-        List<Cluster> clusters = clusterRepository.findClustersBySidAndDate(sid, date);
-        List<ClusterDto> clusterDtos = clusters.stream()
-                .map(cluster -> {
-                    ClusterDto clusterDto = ClusterDto.builder().build();
-                    // TODO 클러스터 세팅
-                    return clusterDto;
-                })
-                .collect(Collectors.toList());
-        return clusterDtos;
-    }
-
-    public List<ClusterDto> getHotClusters() {
-        return null;
-    }
-
-    public ClusterDto getCluster(Long cid) {
-        Cluster cluster = clusterRepository.findById(cid).orElse(null);
-        ClusterDto clusterDto = null;
-
-        if (cluster != null) {
-            clusterDto = ClusterDto.builder().build();
-            // TODO clusterDto 세팅
-        }
-
+public interface NewsService {
+    default ClusterDto makeClusterDto(Cluster cluster, List<ArticleDto> articleDtoList) {
+        ClusterDto clusterDto = ClusterDto.builder()
+                .clusterId(cluster.getClusterId())
+                .title(cluster.getTitle())
+                .imgUrl(cluster.getImgUrl())
+                .summary(cluster.getSummary())
+                .articleList(articleDtoList)
+                .regdate(cluster.getRegdate())
+                .chatNamespace("")
+                .relatedClusterId(cluster.getRelatedCluster().getClusterId())
+                .build();
         return clusterDto;
     }
 
-    public void deleteCluster(Long cid) {
-        clusterRepository.deleteById(cid);
+    default ArticleDto entityToDto(Article article) {
+        ArticleDto articleDto = ArticleDto.builder()
+                .articleId(article.getArticleId())
+                .title(article.getTitle())
+                .imgUrl(article.getImgUrl())
+                .url(article.getUrl())
+                .press(article.getPress())
+                .regdate(article.getRegdate())
+                .build();
+        return articleDto;
     }
 
-    public void deleteArticle(Long aid) {
-        articleRepository.deleteById(aid);
+    default List<ArticleDto> MakeArticleDtoList(List<Article> articleList) {
+        List<ArticleDto> articleDtoList = articleList.stream()
+                .map(this::entityToDto)
+                .collect(Collectors.toList());
+
+        return articleDtoList;
     }
 }
-

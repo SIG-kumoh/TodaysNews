@@ -1,8 +1,7 @@
 package com.sig.todaysnews.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -10,5 +9,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ArticleDto {
-    private String temp;
+    private Long articleId;
+    private String title;
+    private String imgUrl;
+    private String url;
+    private String press;
+    private LocalDateTime regdate;
 }

@@ -1,7 +1,7 @@
 package com.sig.todaysnews.controller;
 
 import com.sig.todaysnews.dto.ClusterDto;
-import com.sig.todaysnews.sevice.NewsService;
+import com.sig.todaysnews.sevice.NewsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/news")
 @RequiredArgsConstructor
 public class NewsController {
-    private NewsService newsService;
+    private NewsServiceImpl newsService;
 
     @GetMapping("/proposal")
     @PreAuthorize("hasAnyRole('USER')")
