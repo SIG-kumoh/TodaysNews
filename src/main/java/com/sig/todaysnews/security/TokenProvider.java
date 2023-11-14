@@ -96,6 +96,13 @@ public class TokenProvider implements InitializingBean {
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
+    // 현재 토큰의 남은 만료 시간 리턴
+    public Long getExpiration(String token){
+        Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration();
+        long now = new Date().getTime();
+        return (expiration.getTime() - now);
+    }
+
     // 토큰의 유효성 검증을 수행
     public TokenState validateToken(String token) {
         try {

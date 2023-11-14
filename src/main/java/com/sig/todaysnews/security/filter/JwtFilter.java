@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +40,7 @@ public class JwtFilter extends GenericFilterBean {
         if (StringUtils.hasText(jwt)) {
             TokenState tokenState = tokenProvider.validateToken(jwt);
 
-            if (tokenState == TokenState.SUCCESS) {
+            if (tokenState == TokenState.SUCCESS && !redisService.existsAccessTokenInRedis(jwt)) {
                 Authentication authentication = tokenProvider.getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

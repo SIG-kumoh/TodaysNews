@@ -70,5 +70,13 @@ public class AuthController {
     public void logout(ServletResponse servletResponse) {
         redisService.deleteRefreshTokenByRedis(AuthenticationUtil.getCurrentUsername().get());
         ((HttpServletResponse) servletResponse).setHeader(JwtFilter.AUTHORIZATION_HEADER, "logout");
+
+        String jwt = ((HttpServletResponse) servletResponse).getHeader("Authorization");
+
+        redisService.addAccessTokenByRedis(
+                AuthenticationUtil.getCurrentUsername().get(),
+                jwt,
+                Duration.ofMillis(tokenProvider.getExpiration(jwt))
+        );
     }
 }

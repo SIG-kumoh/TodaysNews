@@ -30,4 +30,13 @@ public class RedisService {
         ValueOperations<String, String> stringStringValueOperations = stringRedisTemplate.opsForValue();
         return stringStringValueOperations.get(username);
     }
+
+    public void addAccessTokenByRedis(String username, String accessToken, Duration duration) {
+        ValueOperations<String, String> stringValueOperations = stringRedisTemplate.opsForValue();
+        stringValueOperations.set(accessToken, username, duration);
+    }
+
+    public boolean existsAccessTokenInRedis(String accessToken) {
+        return stringRedisTemplate.hasKey(accessToken);
+    }
 }
