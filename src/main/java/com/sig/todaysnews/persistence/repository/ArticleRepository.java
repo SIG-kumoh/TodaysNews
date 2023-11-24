@@ -10,6 +10,6 @@ import java.util.Date;
 import java.util.List;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
-    @Query("SELECT a FROM Article a WHERE a.cid = :cid")
+    @Query("SELECT a FROM Article a WHERE a.cluster.clusterId = :cid")
     List<Article> findArticlesByCid(@Param("cid") Long cid);
 }

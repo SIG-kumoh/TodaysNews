@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @RequestMapping("/news")
 @RequiredArgsConstructor
 public class NewsController {
-    private NewsServiceImpl newsService;
+    private final NewsServiceImpl newsService;
 
     @GetMapping("/proposal")
     @PreAuthorize("hasAnyRole('USER')")
@@ -25,27 +26,34 @@ public class NewsController {
     @GetMapping("/section")
     public ResponseEntity<List<ClusterDto>> getSection(
             Long sid,
-            Date date
+            LocalDate date
     ) {
-        return ResponseEntity.ok(null);
+        if (date == null) date = LocalDate.now();
+        List<ClusterDto> res = newsService.getSection(sid, date);
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/hottopic")
-    public ResponseEntity<List<ClusterDto>> getHotClusters() {
-        return ResponseEntity.ok(null);
+    public ResponseEntity<List<ClusterDto>> getHotClusters(
+            LocalDate date
+    ) {
+        List<ClusterDto> res = newsService.getHotClusters(date);
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/cluster")
     public ResponseEntity<ClusterDto> getCluster(
             Long cid
     ) {
-        return ResponseEntity.ok(null);
+        ClusterDto res = newsService.getCluster(cid);
+        return ResponseEntity.ok(res);
     }
 
     @DeleteMapping("/cluster")
     public ResponseEntity<Void> deleteCluster(
             Long cid
     ) {
+        newsService.deleteCluster(cid);
         return ResponseEntity.ok().build();
     }
 
@@ -53,6 +61,7 @@ public class NewsController {
     public ResponseEntity<Void> deleteArticle(
             Long aid
     ) {
+        newsService.deleteArticle(aid);
         return ResponseEntity.ok().build();
     }
 }

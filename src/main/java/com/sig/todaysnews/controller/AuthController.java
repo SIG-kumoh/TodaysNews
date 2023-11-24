@@ -2,14 +2,12 @@ package com.sig.todaysnews.controller;
 
 
 import com.sig.todaysnews.dto.LoginDto;
-import com.sig.todaysnews.dto.TokenDto;
 import com.sig.todaysnews.redis.RedisService;
 import com.sig.todaysnews.security.TokenProvider;
 import com.sig.todaysnews.security.filter.JwtFilter;
 import com.sig.todaysnews.security.util.AuthenticationUtil;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -22,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +35,6 @@ public class AuthController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisService redisService;
-
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginDto loginDto) {
@@ -67,16 +65,30 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public void logout(ServletResponse servletResponse) {
+    public ResponseEntity<Void> logout(ServletRequest servletRequest) {
         redisService.deleteRefreshTokenByRedis(AuthenticationUtil.getCurrentUsername().get());
-        ((HttpServletResponse) servletResponse).setHeader(JwtFilter.AUTHORIZATION_HEADER, "logout");
 
-        String jwt = ((HttpServletResponse) servletResponse).getHeader("Authorization");
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        String jwt = resolveToken(httpServletRequest);
 
         redisService.addAccessTokenByRedis(
                 AuthenticationUtil.getCurrentUsername().get(),
                 jwt,
                 Duration.ofMillis(tokenProvider.getExpiration(jwt))
         );
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "logout");
+        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+    }
+
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(JwtFilter.AUTHORIZATION_HEADER);
+
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+
+        return null;
     }
 }

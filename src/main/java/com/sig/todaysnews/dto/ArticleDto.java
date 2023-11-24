@@ -13,6 +13,7 @@ public class ArticleDto {
     private String title;
     private String imgUrl;
     private String url;
+    private String content;
     private String press;
     private LocalDateTime regdate;
 }

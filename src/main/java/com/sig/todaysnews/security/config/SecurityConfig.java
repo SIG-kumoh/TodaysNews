@@ -44,6 +44,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/auth/login").permitAll() // 로그인 api
                         .requestMatchers("/user/signup").permitAll() // 회원가입 api
+                        .requestMatchers("/news/section").permitAll() // 섹션 조회 api
+                        .requestMatchers("/news/hottopic").permitAll() // 핫토픽 조회 api
+                        .requestMatchers("/news/cluster").permitAll() // 클러스터 조회 api
                         .requestMatchers("/favicon.ico").permitAll()
                         .anyRequest().authenticated() // 그 외 인증 없이 접근X
                 )

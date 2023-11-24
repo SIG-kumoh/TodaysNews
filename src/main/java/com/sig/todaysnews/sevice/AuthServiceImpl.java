@@ -17,7 +17,7 @@ import com.sig.todaysnews.persistence.repository.UserRepository;
 
 @Component("userDetailsService")
 @RequiredArgsConstructor
-public class AuthService implements UserDetailsService {
+public class AuthServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override

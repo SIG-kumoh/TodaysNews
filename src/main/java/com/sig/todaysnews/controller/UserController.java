@@ -1,8 +1,7 @@
 package com.sig.todaysnews.controller;
 
 import com.sig.todaysnews.dto.UserDto;
-import com.sig.todaysnews.security.filter.JwtFilter;
-import com.sig.todaysnews.sevice.UserService;
+import com.sig.todaysnews.sevice.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @GetMapping
     public ResponseEntity<UserDto> getMyUserInfo() {

@@ -43,7 +43,6 @@ public class TokenProvider implements InitializingBean {
         this.refreshTokenValidityInSeconds = refreshTokenValidityInSeconds * 1000L;
     }
 
-    // 빈이 생성되고 주입을 받은 후에 secret값을 Base64 Decode해서 key 변수에 할당하기 위해
     @Override
     public void afterPropertiesSet() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);

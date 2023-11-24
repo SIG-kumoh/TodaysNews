@@ -74,6 +74,9 @@ public class JwtFilter extends GenericFilterBean {
         for (Cookie cookie : rc) {
             if (cookie.getName().equals("refresh-token")) {
                 String refreshToken = cookie.getValue();
+                if (tokenProvider.validateToken(refreshToken) != TokenState.SUCCESS) {
+                    break;
+                }
                 Authentication authentication = tokenProvider.getAuthentication(refreshToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
