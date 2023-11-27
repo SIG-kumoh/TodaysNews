@@ -17,11 +17,13 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<UserDto> getMyUserInfo() {
-        return ResponseEntity.ok(null);
+        UserDto res = userService.getMyUserWithAuthorities();
+        return ResponseEntity.ok(res);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteMyUserInfo() {
+        userService.deleteMyUserWithAuthorities();
         return ResponseEntity.ok().build();
     }
 
@@ -29,6 +31,7 @@ public class UserController {
     public ResponseEntity<Void> updateMyUserInfo(
             @Valid @RequestBody UserDto userDto
     ) {
+        userService.updateMyUserWithAuthorities(userDto);
         return ResponseEntity.ok().build();
     }
 
@@ -36,6 +39,7 @@ public class UserController {
     public ResponseEntity<UserDto> getUserInfo(
             @PathVariable String username
     ) {
+        userService.getUserWithAuthorities(username);
         return ResponseEntity.ok().build();
     }
 
@@ -43,6 +47,7 @@ public class UserController {
     public ResponseEntity<Void> deleteUserInfo(
             @PathVariable String username
     ) {
+        userService.deleteUserWithAuthorities(username);
         return ResponseEntity.ok().build();
     }
 
@@ -51,6 +56,7 @@ public class UserController {
             @PathVariable String username,
             @Valid @RequestBody UserDto userDto
     ) {
+        userService.updateUserWithAuthorities(username, userDto);
         return ResponseEntity.ok().build();
     }
 
@@ -64,9 +70,13 @@ public class UserController {
     }
 
     @PostMapping("/dup-check")
-    public ResponseEntity<Void> dupCheck(
-            @Valid @RequestBody UserDto userDto
+    public ResponseEntity<Boolean> dupCheck(
+            @Valid @RequestBody String username
     ) {
-        return ResponseEntity.ok().build();
+        boolean res = userService.dupCheck(username);
+        if(res)
+            return ResponseEntity.ok(true);
+        else
+            return ResponseEntity.ok(false);
     }
 }

@@ -49,8 +49,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findOneWithAuthoritiesByUsername(username).orElse(null) != null;
     }
 
-    public User getMyUserWithAuthorities() {
-        return userRepository.findOneWithAuthoritiesByUsername(AuthenticationUtil.getCurrentUsername().get()).get();
+    public UserDto getMyUserWithAuthorities() {
+        User user = userRepository.findOneWithAuthoritiesByUsername(AuthenticationUtil.getCurrentUsername().get()).get();
+        UserDto userDto = null;
+
+        if(user != null) {
+            userDto = entityToDto(user);
+        }
+        return userDto;
     }
 
     public UserDto getUserWithAuthorities(String username) {
@@ -77,8 +83,8 @@ public class UserServiceImpl implements UserService {
         return res;
     }
 
-    public UserDto updateUserWithAuthorities(UserDto userDto) {
-        User user = userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername()).get();
+    public UserDto updateUserWithAuthorities(String username, UserDto userDto) {
+        User user = userRepository.findOneWithAuthoritiesByUsername(username).get();
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setProfileImgUrl(userDto.getProfileImgUrl());
         user.setNickname(userDto.getNickname());
