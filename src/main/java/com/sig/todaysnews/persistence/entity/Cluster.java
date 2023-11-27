@@ -26,7 +26,10 @@ public class Cluster {
     @JoinColumn(name = "section_id")
     private Section section;
     @OneToOne
-    @JoinColumn(name = "cluster_id")
+    @JoinColumn(name = "centroid_id")
+    private Article centroid;
+    @OneToOne
+    @JoinColumn(name = "related_cluster_id")
     private Cluster relatedCluster;
     @OneToMany(mappedBy = "cluster")
     private List<Article> articles = new ArrayList<>();

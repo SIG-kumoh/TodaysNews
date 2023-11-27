@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -19,8 +18,12 @@ public class NewsController {
 
     @GetMapping("/proposal")
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<List<ClusterDto>> getProposal() {
-        return ResponseEntity.ok(null);
+    public ResponseEntity<List<ClusterDto>> getProposal(
+            LocalDate date
+    ) {
+        if (date == null) date = LocalDate.now();
+        List<ClusterDto> res = newsService.getProposal(date);
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/section")

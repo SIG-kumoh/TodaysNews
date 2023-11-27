@@ -20,6 +20,6 @@ public class ViewHistory {
     @JoinColumn(name = "user_id")
     User user;
     @ManyToOne
-    @JoinColumn(name = "cluster_id")
-    Cluster cluster;
+    @JoinColumn(name = "centroid_id")
+    Article centroid;
 }
