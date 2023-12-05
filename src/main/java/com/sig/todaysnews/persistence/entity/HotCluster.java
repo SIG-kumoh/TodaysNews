@@ -23,5 +23,5 @@ public class HotCluster {
     private Cluster cluster;
     private LocalDateTime regdate;
     private Integer size;
-    private String namespace;
+    private String roomName;
 }

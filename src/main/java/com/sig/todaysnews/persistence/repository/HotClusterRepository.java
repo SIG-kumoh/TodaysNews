@@ -10,6 +10,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface HotClusterRepository extends JpaRepository<HotCluster, Cluster> {
-    @Query("SELECT c FROM HotCluster c WHERE FUNCTION('DATE', c.regdate) = :date")
+    @Query("SELECT c FROM HotCluster c WHERE FUNCTION('DATE', c.regdate) = :date ORDER BY c.size DESC")
     List<HotCluster> findHotClustersByDate(@Param("date") LocalDate date);
 }

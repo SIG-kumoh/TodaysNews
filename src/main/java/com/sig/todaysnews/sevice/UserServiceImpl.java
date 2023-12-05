@@ -34,8 +34,6 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
                 .username(userDto.getUsername())
                 .password(passwordEncoder.encode(userDto.getPassword()))
-                .profileImgUrl(userDto.getProfileImgUrl())
-                .nickname(userDto.getNickname())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();
@@ -75,8 +73,6 @@ public class UserServiceImpl implements UserService {
         if (userDto.getUsername().equals(AuthenticationUtil.getCurrentUsername().get())) {
             User user = userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername()).get();
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            user.setProfileImgUrl(userDto.getProfileImgUrl());
-            user.setNickname(userDto.getNickname());
             userRepository.save(user);
             res = entityToDto(user);
         }
@@ -86,8 +82,6 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUserWithAuthorities(String username, UserDto userDto) {
         User user = userRepository.findOneWithAuthoritiesByUsername(username).get();
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setProfileImgUrl(userDto.getProfileImgUrl());
-        user.setNickname(userDto.getNickname());
         userRepository.save(user);
         return entityToDto(user);
     }

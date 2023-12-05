@@ -17,7 +17,6 @@ public class NewsController {
     private final NewsServiceImpl newsService;
 
     @GetMapping("/proposal")
-    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<List<ClusterDto>> getProposal(
             LocalDate date
     ) {
@@ -40,6 +39,7 @@ public class NewsController {
     public ResponseEntity<List<ClusterDto>> getHotClusters(
             LocalDate date
     ) {
+        if (date == null) date = LocalDate.now();
         List<ClusterDto> res = newsService.getHotClusters(date);
         return ResponseEntity.ok(res);
     }

@@ -2,14 +2,14 @@ package com.sig.todaysnews.controller;
 
 
 import com.sig.todaysnews.dto.LoginDto;
+import com.sig.todaysnews.dto.UserDto;
 import com.sig.todaysnews.redis.RedisService;
 import com.sig.todaysnews.security.TokenProvider;
 import com.sig.todaysnews.security.filter.JwtFilter;
 import com.sig.todaysnews.security.util.AuthenticationUtil;
+import com.sig.todaysnews.sevice.UserServiceImpl;
 import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -32,12 +32,13 @@ import java.time.Duration;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
+    private final UserServiceImpl userService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisService redisService;
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody LoginDto loginDto) {
+    public ResponseEntity<UserDto> login(@Valid @RequestBody LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
 
@@ -58,10 +59,11 @@ public class AuthController {
                 Duration.ofMillis(tokenProvider.getRefreshTokenValidityInSeconds())
         );
 
+        UserDto userDto = userService.getMyUserWithAuthorities();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
         httpHeaders.add(HttpHeaders.SET_COOKIE, responseCookie.toString());
-        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(userDto, httpHeaders, HttpStatus.OK);
     }
 
     @PostMapping("/logout")
@@ -74,7 +76,7 @@ public class AuthController {
         redisService.addAccessTokenByRedis(
                 AuthenticationUtil.getCurrentUsername().get(),
                 jwt,
-                Duration.ofMillis(tokenProvider.getExpiration(jwt))
+                Duration.ofMillis(tokenProvider.getTokenValidityInMilliseconds())
         );
 
         HttpHeaders httpHeaders = new HttpHeaders();

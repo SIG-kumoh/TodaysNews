@@ -14,8 +14,10 @@ public class ClusterDto {
     private String title;
     private String imgUrl;
     private String summary;
+    private List<String> words;
+    private Integer size;
     private List<ArticleDto> articleList;
     private LocalDateTime regdate;
-    private String chatNamespace;
-    private Long relatedClusterId;
+    private String roomName;
+    private List<ClusterDto> relatedClusters;
 }

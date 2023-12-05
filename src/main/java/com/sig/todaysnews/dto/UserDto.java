@@ -1,9 +1,12 @@
 package com.sig.todaysnews.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sig.todaysnews.persistence.entity.Authority;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,11 +23,5 @@ public class UserDto {
     @Size(min = 3, max = 100)
     private String password;
 
-    @NotNull
-    @Size(min = 3, max = 150)
-    private String profileImgUrl;
-
-    @NotNull
-    @Size(min = 3, max = 50)
-    private String nickname;
+    private Set<Authority> authorities;
 }

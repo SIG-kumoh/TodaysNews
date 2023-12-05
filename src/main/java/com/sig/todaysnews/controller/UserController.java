@@ -64,17 +64,15 @@ public class UserController {
     public ResponseEntity<UserDto> signup(
             @Valid @RequestBody UserDto userDto
     ) {
-        Logger logger = LoggerFactory.getLogger(UserController.class);
-        logger.debug(userDto.getNickname());
         return ResponseEntity.ok(userService.signup(userDto));
     }
 
     @PostMapping("/dup-check")
     public ResponseEntity<Boolean> dupCheck(
-            @Valid @RequestBody String username
+            @RequestBody UserDto userDto
     ) {
-        boolean res = userService.dupCheck(username);
-        if(res)
+        boolean res = userService.dupCheck(userDto.getUsername());
+        if (res)
             return ResponseEntity.ok(true);
         else
             return ResponseEntity.ok(false);

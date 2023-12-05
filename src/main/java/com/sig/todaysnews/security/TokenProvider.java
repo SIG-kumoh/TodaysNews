@@ -25,12 +25,8 @@ public class TokenProvider implements InitializingBean {
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
     private static final String AUTHORITIES_KEY = "auth";
     private final String secret;
+
     private final long tokenValidityInMilliseconds;
-
-    public long getRefreshTokenValidityInSeconds() {
-        return refreshTokenValidityInSeconds;
-    }
-
     private final long refreshTokenValidityInSeconds;
     private Key key;
 
@@ -42,6 +38,15 @@ public class TokenProvider implements InitializingBean {
         this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000L;
         this.refreshTokenValidityInSeconds = refreshTokenValidityInSeconds * 1000L;
     }
+
+    public long getTokenValidityInMilliseconds() {
+        return tokenValidityInMilliseconds;
+    }
+
+    public long getRefreshTokenValidityInSeconds() {
+        return refreshTokenValidityInSeconds;
+    }
+
 
     @Override
     public void afterPropertiesSet() {

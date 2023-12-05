@@ -22,6 +22,8 @@ public class Cluster {
     private String imgUrl;
     private String title;
     private String summary;
+    private Integer size;
+    private String words;
     @ManyToOne
     @JoinColumn(name = "section_id")
     private Section section;

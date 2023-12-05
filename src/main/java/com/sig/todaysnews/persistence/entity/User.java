@@ -19,8 +19,6 @@ public class User {
     Long userId;
     String username;
     String password;
-    String profileImgUrl;
-    String nickname;
     boolean activated;
     @ManyToMany
     @JoinTable(
